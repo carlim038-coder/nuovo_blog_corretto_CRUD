@@ -1,18 +1,21 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ArticleController;
 
-// Rotta per la home page che carica la vista welcome.blade.php
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/', [ArticleController::class, 'home'])->name('home');
+Route::get('/article/index', [ArticleController::class, 'index'])->name('article.index');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/article/create', [ArticleController::class, 'create'])->name('article.create');
+    Route::post('/article/store', [ArticleController::class, 'store'])->name('article.store');
+    
+    Route::get('/article/{article}/edit', [ArticleController::class, 'edit'])->name('article.edit');
+    Route::put('/article/{article}/update', [ArticleController::class, 'update'])->name('article.update');
+    
+    Route::delete('/article/{article}', [ArticleController::class, 'destroy'])->name('article.destroy');
 });
 
-// Mostra la lista dei prodotti
-Route::get('/products', [ProductController::class, 'index'])->name('product.index');
 
-// Mostra il form per creare un nuovo prodotto 
-Route::get('/products/create', [ProductController::class, 'create'])->name('product.create');
-
-// Salva il prodotto nel database quando invii il form
-Route::post('/products', [ProductController::class, 'store'])->name('product.store');
+Route::get('/article/{article}', [ArticleController::class, 'show'])->name('article.show');

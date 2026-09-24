@@ -32,10 +32,11 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         // Reindirizzamento personalizzato dopo la Registrazione
+      // Reindirizzamento personalizzato dopo la Registrazione
         $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
             public function toResponse($request)
             {
-                return redirect()->route('product.index');
+                return redirect()->route('article.index'); // <-- CORRETTO
             }
         });
     }
