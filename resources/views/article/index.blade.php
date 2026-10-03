@@ -23,18 +23,27 @@
                             <!-- Testo completo dell'articolo -->
                             <p class="card-text">{{ $article->body }}</p>
                             
-                            <!-- Autore dell'articolo (stile slide del professore) -->
-                            <p class="card-text text-muted">Creato dall'utente: {{ $article->user->name }}</p>
+                            <!-- Autore dell'articolo -->
+                            <p class="card-text text-muted mb-1">Creato dall'utente: {{ $article->user->name ?? 'Sconosciuto' }}</p>
                             
-                            <!-- Bottoni azione -->
+                            <!-- Data e ora di creazione -->
+                            <p class="card-text text-muted small mb-3">Creato il: {{ $article->created_at->format('d/m/Y H:i') }}</p>
+                            
+                            <!-- Bottone Leggi (visibile a tutti) -->
                             <a href="{{ route('article.show', compact('article')) }}" class="btn btn-primary btn-sm">Leggi</a>
-                            <a href="{{ route('article.edit', compact('article')) }}" class="btn btn-warning btn-sm">Modifica</a>
 
-                            <form action="{{ route('article.destroy', compact('article')) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
-                            </form>
+                            <!-- Pulsanti di gestione visibili solo al proprietario loggato -->
+                            @auth
+                                @if (Auth::id() === $article->user_id)
+                                    <a href="{{ route('article.edit', compact('article')) }}" class="btn btn-warning btn-sm">Modifica</a>
+
+                                    <form action="{{ route('article.destroy', compact('article')) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
+                                    </form>
+                                @endif
+                            @endauth
                         </div>
                     </div>
                 </div>

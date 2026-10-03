@@ -18,6 +18,14 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * Relazione One-to-Many: un utente ha più articoli
+     */
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

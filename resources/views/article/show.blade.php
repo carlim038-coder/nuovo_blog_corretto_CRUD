@@ -4,7 +4,8 @@
             <div class="col-12 col-md-8">
                 <h1 class="display-4 mb-3">{{ $article->title }}</h1>
                 <h3 class="text-muted mb-4">{{ $article->subtitle }}</h3>
-                <p class="text-muted mb-4">Scritto da: {{ $article->user->name }}</p>
+                <p class="text-muted mb-4">Scritto da: {{ $article->user->name ?? 'Sconosciuto' }}</p>
+                
                 @if ($article->img)
                     <img src="{{ Storage::url($article->img) }}" class="img-fluid rounded mb-4" alt="{{ $article->title }}">
                 @else
@@ -15,13 +16,19 @@
 
                 <div class="mt-4">
                     <a href="{{ route('article.index') }}" class="btn btn-secondary">Torna alla lista</a>
-                    <a href="{{ route('article.edit', compact('article')) }}" class="btn btn-warning">Modifica</a>
-                    
-                    <form action="{{ route('article.destroy', compact('article')) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Elimina Articolo</button>
-                    </form>
+
+                    <!-- Pulsanti di modifica ed eliminazione protetti come nel codice del professore -->
+                    @auth
+                        @if (Auth::id() === $article->user_id)
+                            <a href="{{ route('article.edit', compact('article')) }}" class="btn btn-warning">Modifica</a>
+                            
+                            <form action="{{ route('article.destroy', compact('article')) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Elimina Articolo</button>
+                            </form>
+                        @endif
+                    @endauth
                 </div>
             </div>
         </div>

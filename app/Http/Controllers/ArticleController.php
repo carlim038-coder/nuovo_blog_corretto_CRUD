@@ -56,52 +56,48 @@ class ArticleController extends Controller
 
     public function edit(Article $article)
     {
-        // Controllo di sicurezza: se l'utente loggato non è il proprietario, blocca l'accesso (403)
-        if ($article->user_id !== Auth::id()) {
-            abort(403, 'Non sei autorizzato a modificare questo articolo.');
+        if ($article->user_id == Auth::user()->id) {
+            return view('article.edit', compact('article'));
+        } else {
+            return redirect()->route('welcome')->with('errorMessage', 'Non puoi vedere questa pagina');
         }
-
-        return view('article.edit', compact('article'));
     }
 
     public function update(Request $request, Article $article)
     {
-        // Controllo di sicurezza anche in fase di aggiornamento (fondamentale)
-        if ($article->user_id !== Auth::id()) {
-            abort(403, 'Non sei autorizzato a modificare questo articolo.');
+        if ($article->user_id == Auth::user()->id) {
+            $request->validate([
+                'title' => 'required|min:5|max:255',
+                'subtitle' => 'required|min:5|max:255',
+                'body' => 'required|min:10',
+                'img' => 'nullable|image|max:2048',
+            ]);
+
+            $img = $article->img;
+            if ($request->hasFile('img')) {
+                $img = $request->file('img')->store('img', 'public');
+            }
+
+            $article->update([
+                'title' => $request->title,
+                'subtitle' => $request->subtitle,
+                'body' => $request->body,
+                'img' => $img,
+            ]);
+
+            return redirect()->route('article.index')->with('success', 'Articolo modificato con successo!');
+        } else {
+            return redirect()->route('welcome')->with('errorMessage', 'Non puoi vedere questa pagina');
         }
-
-        $request->validate([
-            'title' => 'required|min:5|max:255',
-            'subtitle' => 'required|min:5|max:255',
-            'body' => 'required|min:10',
-            'img' => 'nullable|image|max:2048',
-        ]);
-
-        $img = $article->img;
-        if ($request->hasFile('img')) {
-            $img = $request->file('img')->store('img', 'public');
-        }
-
-        $article->update([
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'body' => $request->body,
-            'img' => $img,
-        ]);
-
-        return redirect()->route('article.index')->with('success', 'Articolo modificato con successo!');
     }
 
     public function destroy(Article $article)
     {
-        // Controllo di sicurezza anche per l'eliminazione (così non possono cancellare i post altrui)
-        if ($article->user_id !== Auth::id()) {
-            abort(403, 'Non sei autorizzato a eliminare questo articolo.');
+        if ($article->user_id == Auth::user()->id) {
+            $article->delete();
+            return redirect()->route('article.index')->with('success', 'Articolo eliminato con successo!');
+        } else {
+            return redirect()->route('welcome')->with('errorMessage', 'Non puoi vedere questa pagina');
         }
-
-        $article->delete();
-
-        return redirect()->route('article.index')->with('success', 'Articolo eliminato con successo!');
     }
 }
