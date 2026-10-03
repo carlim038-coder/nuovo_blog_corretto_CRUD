@@ -4,7 +4,7 @@
             <div class="col-12 col-md-8">
                 <h1 class="display-4 mb-3">{{ $article->title }}</h1>
                 <h3 class="text-muted mb-4">{{ $article->subtitle }}</h3>
-
+                <p class="text-muted mb-4">Scritto da: {{ $article->user->name }}</p>
                 @if ($article->img)
                     <img src="{{ Storage::url($article->img) }}" class="img-fluid rounded mb-4" alt="{{ $article->title }}">
                 @else

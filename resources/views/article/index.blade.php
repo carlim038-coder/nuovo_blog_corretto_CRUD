@@ -19,7 +19,12 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $article->title }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{ $article->subtitle }}</h6>
-                            <p class="card-text">{{ Str::limit($article->body, 50) }}</p>
+                            
+                            <!-- Testo completo dell'articolo -->
+                            <p class="card-text">{{ $article->body }}</p>
+                            
+                            <!-- Autore dell'articolo (stile slide del professore) -->
+                            <p class="card-text text-muted">Creato dall'utente: {{ $article->user->name }}</p>
                             
                             <!-- Bottoni azione -->
                             <a href="{{ route('article.show', compact('article')) }}" class="btn btn-primary btn-sm">Leggi</a>
