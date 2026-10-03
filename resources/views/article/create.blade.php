@@ -9,22 +9,34 @@
 
                     <div class="mb-3">
                         <label for="title" class="form-label">Titolo:</label>
-                        <input type="text" name="title" class="form-control" id="title" value="{{ old('title') }}">
+                        <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title" value="{{ old('title') }}">
+                        @error('title')
+                            <span class="text-danger small">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="subtitle" class="form-label">Sottotitolo:</label>
-                        <input type="text" name="subtitle" class="form-control" id="subtitle" value="{{ old('subtitle') }}">
+                        <input type="text" name="subtitle" class="form-control @error('subtitle') is-invalid @enderror" id="subtitle" value="{{ old('subtitle') }}">
+                        @error('subtitle')
+                            <span class="text-danger small">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="body" class="form-label">Corpo dell'articolo:</label>
-                        <textarea name="body" id="body" cols="30" rows="10" class="form-control">{{ old('body') }}</textarea>
+                        <textarea name="body" id="body" cols="30" rows="10" class="form-control @error('body') is-invalid @enderror">{{ old('body') }}</textarea>
+                        @error('body')
+                            <span class="text-danger small">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="img" class="form-label">Immagine:</label>
-                        <input type="file" name="img" class="form-control" id="img">
+                        <input type="file" name="img" class="form-control @error('img') is-invalid @enderror" id="img">
+                        @error('img')
+                            <span class="text-danger small">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <button type="submit" class="btn btn-primary">Crea Articolo</button>

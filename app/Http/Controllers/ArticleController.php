@@ -19,6 +19,12 @@ class ArticleController extends Controller
         return view('article.index', compact('articles'));
     }
 
+    public function dashboard()
+    {
+        $articles = Auth::user()->articles()->orderBy('created_at', 'desc')->get();
+        return view('article.dashboard', compact('articles'));
+    }
+
     public function create()
     {
         return view('article.create');
